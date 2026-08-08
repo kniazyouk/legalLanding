@@ -1,0 +1,671 @@
+╔══════════════════════════════════════════════════════════════╗
+║           ESTATUS LEGAL - GUIA COMPLETA                        ║
+║      React + Vite + TypeScript + Tailwind CSS v4             ║
+╚══════════════════════════════════════════════════════════════╝
+
+PRERREQUISITO: Ya tenés el proyecto creado con:
+  pnpm create vite legal-landing --template react-ts
+  cd legal-landing
+  pnpm install
+
+PALETA DE COLORES DEL DISEÑO:
+  Azul marino (navy)   #1a365d  -> color principal del bufete
+  Azul marino claro    #2a4a7f  -> hover / acentos
+  Azul cielo           #60a5fa  -> detalles (iconos, marcador mapa)
+  Blanco               #ffffff  -> fondo y textos sobre navy
+  Gris                 #1f2937  -> textos de cuerpo
+
+══════════════════════════════════════════════════════════════════
+PASO 1 — Instalar dependencias
+══════════════════════════════════════════════════════════════════
+
+Ejecutá en la terminal (parado en /legal-landing):
+
+  pnpm add -D tailwindcss @tailwindcss/vite
+  pnpm add lucide-react
+
+┌────────────────────────────────────────────────────────────┐
+│ ¿Qué pasó?                                                 │
+│ pnpm add -D = dependencia de desarrollo (solo para         │
+│   construir el proyecto, no va al navegador final)         │
+│ tailwindcss + @tailwindcss/vite = Tailwind v4 con su      │
+│   plugin oficial para Vite                                 │
+│ lucide-react = biblioteca de iconos (escalas de justicia,  │
+│   maletín, teléfono, redes sociales, etc.). Se instala     │
+│   como dependencia normal porque se usa en runtime        │
+└────────────────────────────────────────────────────────────┘
+
+══════════════════════════════════════════════════════════════════
+PASO 2 — Configurar vite.config.ts
+══════════════════════════════════════════════════════════════════
+
+ABRÍ: vite.config.ts (en la raíz del proyecto)
+PEGÁ ESTO (reemplazando TODO el contenido):
+
+  import { defineConfig } from 'vite'
+  import react from '@vitejs/plugin-react'
+  import tailwindcss from '@tailwindcss/vite'
+
+  export default defineConfig({
+    plugins: [react(), tailwindcss()],
+  })
+
+┌────────────────────────────────────────────────────────────┐
+│ ¿Qué pasó?                                                 │
+│ Se importó el plugin tailwindcss y se agregó al array      │
+│ de plugins de Vite. Esto le dice a Vite "procesá todos    │
+│ los archivos CSS con Tailwind". Sin esto, Tailwind no      │
+│ funciona.                                                  │
+│                                                           │
+│ Si te dio ERROR: asegurate de haber ejecutado el PASO 1   │
+│ primero (pnpm add -D tailwindcss @tailwindcss/vite)        │
+└────────────────────────────────────────────────────────────┘
+
+══════════════════════════════════════════════════════════════════
+PASO 3 — Limpiar archivos del template default
+══════════════════════════════════════════════════════════════════
+
+Ejecutá en la terminal:
+
+  rm src/App.css src/assets/react.svg src/assets/vite.svg
+
+Esto borra los archivos de la plantilla de Vite que NO vamos a
+usar. La foto de portada ya está descargada en
+src/assets/hero.png (la importamos en el PASO 7).
+
+Ahora ABRÍ src/App.tsx y src/index.css y BORRÁ TODO su contenido
+(dejalos vacíos por ahora, los vamos a llenar en pasos siguientes).
+
+┌────────────────────────────────────────────────────────────┐
+│ IMPORTANTE: NO toques src/main.tsx                         │
+│ El template ya lo deja listo: importa './index.css' y a    │
+│ App. No hace falta modificarlo en este proyecto.           │
+└────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────┐
+│ ¿Qué pasó?                                                 │
+│ La plantilla de Vite trae un contador de ejemplo con       │
+│ estilos (App.css), logos SVG y una imagen base. Eso lo     │
+│ borramos para arrancar de cero con NUESTRO diseño.         │
+└────────────────────────────────────────────────────────────┘
+
+══════════════════════════════════════════════════════════════════
+PASO 4 — Escribir src/index.css (estilos globales + Tailwind)
+══════════════════════════════════════════════════════════════════
+
+ABRÍ: src/index.css
+PEGÁ ESTO EXACTO (reemplaza todo):
+
+  @import "tailwindcss";
+
+  @theme {
+    --color-navy: #1a365d;
+    --color-navy-light: #2a4a7f;
+    --color-sky-accent: #60a5fa;
+  }
+
+  html {
+    font-family: system-ui, "Segoe UI", Roboto, sans-serif;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    background-color: #ffffff;
+    color: #1f2937;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+══════════════════════════════════════════════════════════════════
+PASO 5 — La imagen del Hero (foto real descargada)
+══════════════════════════════════════════════════════════════════
+
+La landing usa como portada una foto real de un grupo de abogados
+(equipo junto a una mesa con mazo y balanza de justicia),
+descargada de Pexels con licencia gratuita. Ya está guardada en:
+
+  src/assets/hero.png
+
+No tenés que descargar nada: solo asegurate de que ese archivo
+exista (ya está en el proyecto, 1920x1280). En el PASO 7 el Hero
+la importa con `import heroImg from '../assets/hero.png'`.
+
+┌────────────────────────────────────────────────────────────┐
+│ ¿Qué pasó?                                                 │
+│ Vite permite importar imágenes desde JavaScript. Cualquier │
+│ archivo dentro de src/assets se puede importar y Vite lo   │
+│ empaqueta optimizado en el build final.                    │
+│                                                           │
+│ ¿Querés cambiar la foto? Guardá tu imagen como             │
+│ src/assets/hero.png (JPG o PNG, idealmente ~1920px de      │
+│ ancho) y listo: el Hero la usa sin tocar código.          │
+│ ¿Sin ninguna imagen? Usá la OPCION B del PASO 7            │
+│ (degradado navy, sin archivo de imagen).                   │
+└────────────────────────────────────────────────────────────┘
+
+══════════════════════════════════════════════════════════════════
+PASO 6 — Crear src/components/Navbar.tsx
+══════════════════════════════════════════════════════════════════
+
+CREÁ: src/components/Navbar.tsx (no existe, crealo)
+PEGÁ ESTO:
+
+  import Logo from './Logo'
+
+  const Navbar = () => {
+    const links = [
+      'Home', 'About Us', 'Legal Services',
+      'Case Results', 'Our Team', 'Blog', 'Contact Us',
+    ]
+
+    return (
+      <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-gray-200">
+        <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
+          <a href="#" className="flex items-center gap-3">
+            <Logo className="w-10 h-10 text-[#0F172A]" />
+            <span className="flex flex-col leading-none">
+              <span className="text-[#0F172A] font-black text-xl tracking-tight">ESTATUS</span>
+              <span className="text-[#0F172A] text-[10px] font-semibold tracking-[0.35em]">LEGAL</span>
+            </span>
+          </a>
+
+          <ul className="hidden lg:flex gap-8">
+            {links.map((link) => (
+              <li key={link}>
+                <a
+                  href="#"
+                  className="text-sm text-gray-700 hover:text-navy transition-colors"
+                >
+                  {link}
+                </a>
+              </li>
+            ))}
+          </ul>
+
+          <a
+            href="#"
+            className="bg-navy text-white text-sm font-semibold px-5 py-2.5 rounded-lg hover:bg-navy-light transition-colors"
+          >
+            Request Consultation
+          </a>
+        </div>
+      </nav>
+    )
+  }
+
+  export default Navbar
+
+┌────────────────────────────────────────────────────────────┐
+│ Concepto React #1: COMPONENTE FUNCIONAL                    │
+│                                                           │
+│ const Navbar = () => { ... }  ->  es un componente de      │
+│ React: una función que devuelve JSX (HTML escrito dentro   │
+│ de JavaScript). Después se exporta con export default      │
+│ para importarlo desde otros archivos.                     │
+│                                                           │
+│ Concepto React #2: RENDERIZADO DE LISTAS (.map())         │
+│                                                           │
+│ {links.map((link) => (...))}  ->  recorre el array de 7   │
+│ enlaces y por cada uno genera un <li> con un <a>. La       │
+│ prop key={link} es obligatoria para que React identifique  │
+│ cada elemento único.                                      │
+│                                                           │
+│ Concepto React #3: className                             │
+│ En React usás className en vez de class (porque class es   │
+│ palabra reservada de JavaScript).                         │
+│                                                           │
+│ Concepto Tailwind #1: UTILIDADES DE LAYOUT                │
+│ sticky top-0 -> el navbar queda pegado arriba al hacer    │
+│   scroll                                                   │
+│ z-50 -> queda por encima del resto de capas               │
+│ bg-white/90 -> blanco con 90% de opacidad                 │
+│ backdrop-blur -> desenfoca lo que pasa por detrás         │
+│ flex items-center justify-between -> distribuye logo,      │
+│   links y botón en horizontal con el logo a la izquierda   │
+│   y el botón a la derecha                                  │
+│ hidden lg:flex -> los links se ocultan en mobile y        │
+│   aparecen en pantallas grandes (lg y más)                │
+└────────────────────────────────────────────────────────────┘
+
+══════════════════════════════════════════════════════════════════
+PASO 7 — Crear src/components/Hero.tsx
+══════════════════════════════════════════════════════════════════
+
+CREÁ: src/components/Hero.tsx (no existe, crealo)
+PEGÁ ESTO (usando la foto del PASO 5):
+
+  import heroImg from '../assets/hero.png'
+
+  const Hero = () => {
+    return (
+      <section className="relative min-h-screen flex items-center">
+        <img
+          src={heroImg}
+          alt="Equipo de abogados de Estatus Legal"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-navy/70" />
+
+        <div className="relative z-10 max-w-7xl mx-auto px-6 py-24">
+          <h1 className="text-white text-4xl md:text-6xl font-extrabold leading-tight max-w-2xl">
+            TRUSTED LEGAL COUNSEL FOR YOUR PEACE OF MIND
+          </h1>
+          <p className="text-gray-200 text-lg md:text-xl mt-6 max-w-xl">
+            Guiding You Through Legal Challenges with Integrity,
+            Dedication, and Expertise.
+          </p>
+          <a
+            href="#"
+            className="inline-block mt-10 bg-white text-navy font-bold px-8 py-4 rounded-full hover:bg-gray-100 transition-colors"
+          >
+            GET A FREE CONSULTATION
+          </a>
+        </div>
+      </section>
+    )
+  }
+
+  export default Hero
+
+┌────────────────────────────────────────────────────────────┐
+│ ¿SIN FOTO TODAVÍA? (Opcion B)                             │
+│ Reemplazá el <img> y el div del overlay por un div con     │
+│ degradado navy, así la sección se ve bien igual:           │
+│                                                           │
+│ <div className="absolute inset-0 bg-gradient-to-r         │
+│   from-navy via-navy-light to-sky-accent/40" />           │
+│                                                           │
+│ (y borrá la línea import heroImg ...)                     │
+└────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────┐
+│ Concepto React #4: JSX (JavaScript XML)                    │
+│                                                           │
+│ JSX parece HTML pero es JavaScript: podés mezclar          │
+│ etiquetas con expresiones entre {}.                       │
+│                                                           │
+│ Concepto Tailwind #2: RESPONSIVE                          │
+│ md:text-6xl -> text-6xl en pantallas medianas para arriba, │
+│   text-4xl en mobile. Los prefijos son: sm, md, lg, xl.   │
+│                                                           │
+│ Concepto Tailwind #3: POSICIONAMIENTO ABSOLUTO            │
+│ La <img> y el overlay son absolute inset-0: cubren toda    │
+│ la sección. El contenido es relative z-10: queda encima.  │
+│ min-h-screen -> la sección mide al menos la altura de la   │
+│   pantalla (foto a pantalla completa)                     │
+│ object-cover -> la imagen recorta sin deformarse          │
+│ bg-navy/70 -> capa oscura 70% para que el texto blanco    │
+│   siempre se lea bien                                     │
+└────────────────────────────────────────────────────────────┘
+
+══════════════════════════════════════════════════════════════════
+PASO 8 — Crear src/components/Services.tsx
+══════════════════════════════════════════════════════════════════
+
+CREÁ: src/components/Services.tsx (no existe, crealo)
+PEGÁ ESTO:
+
+  import { HeartPulse, Users, Briefcase, ShieldCheck } from 'lucide-react'
+
+  const services = [
+    {
+      icon: HeartPulse,
+      title: 'Personal Injury Law',
+      description:
+        'We fight for the compensation you deserve after accidents, negligence, and injuries.',
+    },
+    {
+      icon: Users,
+      title: 'Family Law & Divorce',
+      description:
+        'Compassionate guidance for custody, divorce, adoption, and other family disputes.',
+    },
+    {
+      icon: Briefcase,
+      title: 'Corporate & Business Law',
+      description:
+        'Contracts, compliance, and corporate strategy to protect and grow your business.',
+    },
+    {
+      icon: ShieldCheck,
+      title: 'Criminal Defense',
+      description:
+        'Aggressive and strategic defense to protect your rights and your freedom.',
+    },
+  ]
+
+  const Services = () => {
+    return (
+      <section className="py-20">
+        <h2 className="text-center text-navy text-3xl md:text-4xl font-bold mb-14">
+          Legal Services
+        </h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto px-6">
+          {services.map((service) => (
+            <div
+              key={service.title}
+              className="bg-white rounded-xl shadow-md p-8 flex flex-col items-center text-center hover:shadow-lg transition-shadow"
+            >
+              <span className="w-16 h-16 rounded-full bg-sky-accent/15 flex items-center justify-center mb-6">
+                <service.icon className="w-8 h-8 text-navy" />
+              </span>
+              <h3 className="text-navy text-lg font-bold mb-3">
+                {service.title}
+              </h3>
+              <p className="text-gray-600 text-sm leading-relaxed">
+                {service.description}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  export default Services
+
+┌────────────────────────────────────────────────────────────┐
+│ Concepto React #5: DATOS COMO ARRAY + TIPADO IMPLICITO    │
+│                                                           │
+│ services = [...]  ->  los datos (icono, título, texto) se  │
+│ almacenan en un array. El componente solo itera y          │
+│ renderiza. Separar datos de presentación es una buena      │
+│ práctica: agregar un 5to servicio es solo agregar un      │
+│ objeto al array.                                          │
+│                                                           │
+│ <service.icon .../>  ->  en JSX, una propiedad con         │
+│ minúscula (service.icon) igual se renderiza como           │
+│ componente porque es un "member expression". El icono      │
+│ guardado en el array se usa como etiqueta JSX.            │
+│                                                           │
+│ Concepto Tailwind #4: GRID RESPONSIVE                     │
+│ grid-cols-1 md:grid-cols-2 lg:grid-cols-4 -> 1 columna en  │
+│   mobile, 2 en tablet, 4 en desktop (el diseño pide 4).   │
+│                                                           │
+│ Concepto Tailwind #5: SHADOW Y BORDES                     │
+│ shadow-md -> sombra suave (como pide el diseño).          │
+│ hover:shadow-lg -> la sombra crece al pasar el mouse.     │
+│ rounded-xl -> esquinas redondeadas.                       │
+│ bg-sky-accent/15 -> el círculo del icono usa el azul       │
+│   cielo al 15% de opacidad (acento suave sobre blanco).   │
+│ w-16 h-16 rounded-full -> círculo de 64px.                │
+└────────────────────────────────────────────────────────────┘
+
+══════════════════════════════════════════════════════════════════
+PASO 9 — Crear src/components/Footer.tsx
+══════════════════════════════════════════════════════════════════
+
+CREÁ: src/components/Footer.tsx (no existe, crealo)
+PEGÁ ESTO:
+
+  import { MapPin, Phone, Mail } from 'lucide-react'
+  import Logo from './Logo'
+
+  // IMPORTANTE: lucide-react YA NO incluye los iconos de marcas
+  // (Facebook, X, LinkedIn, YouTube). Por eso las redes sociales
+  // van como SVG inline (paths oficiales de Simple Icons).
+
+  const FacebookIcon = () => (
+    <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5" aria-hidden="true">
+      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+    </svg>
+  )
+
+  const XIcon = () => (
+    <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5" aria-hidden="true">
+      <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z" />
+    </svg>
+  )
+
+  const LinkedInIcon = () => (
+    <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5" aria-hidden="true">
+      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+    </svg>
+  )
+
+  const YoutubeIcon = () => (
+    <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5" aria-hidden="true">
+      <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+    </svg>
+  )
+
+  const legalLinks = [
+    'Services', 'About', 'Careers', 'Privacy Policy', 'Terms',
+  ]
+
+  const socialIcons = [
+    { name: 'Facebook', Icon: FacebookIcon },
+    { name: 'X / Twitter', Icon: XIcon },
+    { name: 'LinkedIn', Icon: LinkedInIcon },
+    { name: 'YouTube', Icon: YoutubeIcon },
+  ]
+
+  const Footer = () => {
+    return (
+      <footer className="bg-navy text-white">
+        <div className="max-w-7xl mx-auto px-6 py-16 grid grid-cols-1 lg:grid-cols-2 gap-12">
+          {/* Columna izquierda: logo + contacto */}
+          <div>
+            <div className="flex items-center gap-2 mb-6">
+              <Logo className="w-9 h-9 text-white" />
+              <span className="font-bold tracking-wider text-sm">
+                ESTATUS LEGAL
+              </span>
+            </div>
+            <ul className="space-y-4 text-gray-300">
+              <li className="flex items-center gap-3">
+                <MapPin className="w-5 h-5 text-sky-accent shrink-0" />
+                123 Justice Avenue, Suite 500, New York, NY 10001
+              </li>
+              <li className="flex items-center gap-3">
+                <Phone className="w-5 h-5 text-sky-accent shrink-0" />
+                (555) 123-4567
+              </li>
+              <li className="flex items-center gap-3">
+                <Mail className="w-5 h-5 text-sky-accent shrink-0" />
+                info@estatuslegal.com
+              </li>
+            </ul>
+          </div>
+
+          {/* Columna derecha: mapa placeholder */}
+          <div>
+            <h4 className="font-bold mb-4">Find Us Here</h4>
+            <div className="relative rounded-xl overflow-hidden border border-white/20 h-64 bg-navy-light/40 flex items-center justify-center">
+              <MapPin className="w-12 h-12 text-white" />
+              <span className="absolute bottom-3 text-xs text-gray-300">
+                Office Map Placeholder
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Franja inferior */}
+        <div className="border-t border-white/10">
+          <div className="max-w-7xl mx-auto px-6 py-6 flex flex-col md:flex-row items-center justify-between gap-4">
+            <ul className="flex flex-wrap gap-6 text-xs text-gray-400">
+              {legalLinks.map((item) => (
+                <li key={item}>
+                  <a href="#" className="hover:text-white transition-colors">
+                    {item}
+                  </a>
+                </li>
+              ))}
+            </ul>
+            <div className="flex gap-4">
+              {socialIcons.map(({ name, Icon }) => (
+                <a
+                  key={name}
+                  href="#"
+                  aria-label={name}
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
+                  <Icon />
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+      </footer>
+    )
+  }
+
+  export default Footer
+
+┌────────────────────────────────────────────────────────────┐
+│ Concepto React #6: SVG INLINE (iconos de marcas)           │
+│ lucide-react ya no trae iconos de marcas (Facebook, X,     │
+│ LinkedIn, YouTube). Se definen como componentes que solo   │
+│ devuelven un <svg> con fill="currentColor": así heredan    │
+│ el color del texto del padre (text-gray-400 o hover:text- │
+│ white) sin más configuración. El atributo className en el  │
+│ <svg> (w-5 h-5) fija el tamaño.                           │
+│                                                           │
+│ Concepto React #7: PROPS DENTRO DE DATOS                  │
+│ socialIcons = [ { name, Icon }, ... ]  ->  cada red social  │
+│ se guarda con su nombre y su componente. Al mapear se      │
+│ desestructura: { name, Icon } y se renderiza <Icon />.     │
+│                                                           │
+│ Concepto React #8: COMENTARIOS EN JSX                      │
+│ {/* ... */}  ->  dentro de JSX los comentarios van con     │
+│ llaves (así marqué cada columna del footer).              │
+│                                                           │
+│ Concepto Tailwind #6: FLEXBOX Y RESPONSIVE                │
+│ grid grid-cols-1 lg:grid-cols-2 -> las dos columnas del    │
+│   footer (contacto / mapa) apiladas en mobile.            │
+│ space-y-4 -> separa verticalmente los ítems de contacto.  │
+│ flex flex-col md:flex-row -> la franja inferior cambia     │
+│   de columna (mobile) a fila (desktop).                   │
+│ shrink-0 -> evita que el icono se achique si el texto      │
+│   es largo.                                               │
+│ border-t border-white/10 -> línea separadora sutil.       │
+└────────────────────────────────────────────────────────────┘
+
+══════════════════════════════════════════════════════════════════
+PASO 10 — Armar todo en src/App.tsx
+══════════════════════════════════════════════════════════════════
+
+ABRÍ: src/App.tsx (YA existe, reemplazá TODO su contenido)
+PEGÁ ESTO:
+
+  import Navbar from './components/Navbar'
+  import Hero from './components/Hero'
+  import Services from './components/Services'
+  import Footer from './components/Footer'
+
+  function App() {
+    return (
+      <>
+        <Navbar />
+        <main>
+          <Hero />
+          <Services />
+        </main>
+        <Footer />
+      </>
+    )
+  }
+
+  export default App
+
+┌────────────────────────────────────────────────────────────┐
+│ Concepto React #9: COMPOSICION DE COMPONENTES             │
+│                                                           │
+│ App() es el componente RAÍZ. No tiene HTML propio,        │
+│ solo ORGANIZA otros componentes (Navbar, Hero, Services,   │
+│ Footer). Esto es la base de React: interfaces hechas de    │
+│ piezas reutilizables.                                     │
+│                                                           │
+│ <> ... </>  ->  Fragmento de React. Agrupa varios          │
+│ componentes SIN agregar un <div> extra al DOM.            │
+│ <main>  ->  envoltorio semántico para el contenido         │
+│   principal (bueno para accesibilidad y SEO).             │
+└────────────────────────────────────────────────────────────┘
+
+══════════════════════════════════════════════════════════════════
+PASO 11 — Probar
+══════════════════════════════════════════════════════════════════
+
+En la terminal (parado en /legal-landing):
+
+  pnpm run dev
+
+Vas a ver algo como:
+  VITE v6.x.x  ready in XXX ms
+  ➜  Local:   http://localhost:5173/
+
+Abrí http://localhost:5173 en el navegador.
+
+┌────────────────────────────────────────────────────────────┐
+│ Si ves el navbar blanco sticky con logo y botón azul, el  │
+│ hero a pantalla completa con la foto, el título blanco,   │
+│ el botón blanco redondeado, las 4 cards de servicios y el │
+│ footer azul marino con mapa -> ¡LO LOGRASTE!               │
+│                                                           │
+│ ERRORES COMUNES Y SOLUCION:                               │
+│                                                           │
+│ "Module not found" -> revisá que los imports coincidan     │
+│   con los nombres de archivo (mayúsculas, rutas)          │
+│                                                           │
+│ "tailwindcss not found" -> volvé a ejecutar el PASO 1     │
+│                                                           │
+│ La pagina se ve blanca / sin estilos -> el navegador tiene │
+│   cache: hace Ctrl+F5 o abrí en incognito                 │
+│                                                           │
+│ Los colores navy no aparecen -> revisá que los nombres     │
+│   en @theme (index.css) coincidan con los de className    │
+│   (bg-navy, text-navy, bg-navy-light, text-sky-accent)   │
+│                                                           │
+│ No se ve la foto del hero -> revisá que exista                │
+│   src/assets/hero.png y que el import use .png (PASO 7), o   │
+│   usá la OPCION B (degradado navy)                          │
+└────────────────────────────────────────────────────────────┘
+
+══════════════════════════════════════════════════════════════════
+PASO 12 — Verificar el proyecto (opcional pero recomendado)
+══════════════════════════════════════════════════════════════════
+
+Cuando termines, corré en la terminal:
+
+  pnpm lint
+  pnpm build
+
+┌────────────────────────────────────────────────────────────┐
+│ pnpm lint  ->  revisa errores de código con ESLint. Si     │
+│   algo está mal te lo dice y lo corregís.                  │
+│ pnpm build ->  compila TypeScript y genera la carpeta      │
+│   dist/ lista para publicar. Si compila sin errores,       │
+│   tu código es correcto.                                  │
+└────────────────────────────────────────────────────────────┘
+
+══════════════════════════════════════════════════════════════════
+RESUMEN DE CONCEPTOS QUE APRENDISTE
+══════════════════════════════════════════════════════════════════
+
+  REACT:
+  #1  Componente funcional              -> Navbar, Hero, etc.
+  #2  Renderizado de listas (.map())    -> links, servicios, social
+  #3  className (vs class en HTML)      -> en todos lados
+  #4  JSX (mezclar HTML y JS)           -> { } para expresiones
+  #5  Datos como array + render         -> services, socialIcons
+  #6  SVG inline (iconos de marcas)     -> Facebook, X, LinkedIn, YouTube
+  #7  Props desestructuradas            -> { name, Icon } en los arrays
+  #8  Comentarios en JSX {/* */}        -> documentar bloques
+  #9  Composición + fragmentos (<></>)  -> App.tsx como raíz
+  #10 export default / import           -> pasar piezas entre archivos
+
+  TAILWIND:
+  #1  @theme -> colores propios (bg-navy, text-navy...)
+  #2  Responsive (sm, md, lg, xl)       -> grid-cols-4, text-6xl
+  #3  Modifiers (hover:)                -> hover:shadow-lg
+  #4  Opacity (/90, /70, /15)           -> capas y acentos suaves
+  #5  Flexbox / Grid                    -> navbar, cards, footer
+  #6  Posicionamiento absoluto          -> foto + overlay del hero
+  #7  Sombra y bordes (shadow-md, rounded-full) -> cards y botones
+
+  FLUJO COMPLETO DEL PROYECTO:
+  App.tsx (raiz) -> Navbar + Hero + Services + Footer
+  Cada componente recibe solo datos; los estilos viven en
+  Tailwind (index.css define la paleta con @theme).

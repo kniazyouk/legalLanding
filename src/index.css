@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+  @theme {
+    --color-navy: #1a365d;
+    --color-navy-light: #2a4a7f;
+    --color-sky-accent: #60a5fa;
+  }
+
+  html {
+    font-family: system-ui, "Segoe UI", Roboto, sans-serif;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    background-color: #ffffff;
+    color: #1f2937;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
