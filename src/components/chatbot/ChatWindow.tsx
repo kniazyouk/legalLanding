@@ -33,8 +33,8 @@ export function ChatWindow({ messages, isLoading, isHandoff, onClose, onSend }: 
   };
 
   return (
-    <div className="fixed inset-0 w-full h-full bg-white shadow-2xl flex flex-col z-20 sm:inset-auto sm:bottom-20 sm:right-5 sm:max-w-md sm:h-[70vh] sm:rounded-2xl animate-slide-up-fade-in">
-      <div className="bg-navy-light text-white p-4 flex items-center justify-between shadow-md sm:rounded-t-2xl">
+    <div className="fixed bottom-20 right-5 w-[calc(100vw-2.5rem)] max-w-md h-[70vh] bg-white shadow-2xl flex flex-col z-20 rounded-2xl animate-slide-up-fade-in">
+      <div className="bg-navy-light text-white p-4 flex items-center justify-between shadow-md rounded-t-2xl">
         <div className="flex items-center">
           <div className="relative w-12 h-12">
             <img
@@ -66,7 +66,7 @@ export function ChatWindow({ messages, isLoading, isHandoff, onClose, onSend }: 
         <div ref={messagesEndRef} />
       </div>
 
-      <div className="bg-white p-4 border-t border-gray-200 sm:rounded-b-2xl">
+      <div className="bg-white p-4 border-t border-gray-200 rounded-b-2xl">
         <form onSubmit={handleSubmit} className="flex items-center">
           <input
             ref={inputRef}
