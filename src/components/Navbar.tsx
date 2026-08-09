@@ -9,7 +9,7 @@ const Navbar = () => {
 
    return (
    <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-gray-200">
-      <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
+      <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4 gap-3">
          <a href="#" className="flex items-center gap-3">
          <Logo className="w-10 h-10 text-[#0F172A]" />
          <span className="flex flex-col leading-none">
