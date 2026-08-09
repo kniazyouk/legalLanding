@@ -14,15 +14,12 @@ interface Props {
 export function ChatWindow({ messages, isLoading, isHandoff, onClose, onSend }: Props) {
   const [input, setInput] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isLoading]);
 
-  useEffect(() => {
-    inputRef.current?.focus();
-  }, []);
+
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,7 +30,7 @@ export function ChatWindow({ messages, isLoading, isHandoff, onClose, onSend }: 
   };
 
   return (
-    <div className="fixed bottom-20 right-5 w-[calc(100vw-2.5rem)] max-w-md h-[70vh] bg-white shadow-2xl flex flex-col z-20 rounded-2xl animate-slide-up-fade-in">
+    <div className="fixed bottom-5 right-2 w-[calc(100vw-1.5rem)] max-w-md h-[70vh] bg-white shadow-2xl flex flex-col z-20 rounded-2xl animate-slide-up-fade-in">
       <div className="bg-navy-light text-white p-4 flex items-center justify-between shadow-md rounded-t-2xl">
         <div className="flex items-center">
           <div className="relative w-12 h-12">
@@ -58,7 +55,7 @@ export function ChatWindow({ messages, isLoading, isHandoff, onClose, onSend }: 
         </button>
       </div>
 
-      <div className="flex-1 p-6 overflow-y-auto chat-messages bg-gray-50">
+      <div className="flex-1 py-6 px-2 overflow-y-auto chat-messages bg-gray-50">
         {messages.map((turn, i) => (
           <Message key={i} turn={turn} />
         ))}
@@ -69,13 +66,12 @@ export function ChatWindow({ messages, isLoading, isHandoff, onClose, onSend }: 
       <div className="bg-white p-4 border-t border-gray-200 rounded-b-2xl">
         <form onSubmit={handleSubmit} className="flex items-center">
           <input
-            ref={inputRef}
             type="text"
             value={input}
             onChange={e => setInput(e.target.value)}
             placeholder={isHandoff ? 'Chat con agente humano...' : 'Type your message...'}
             disabled={isHandoff}
-            className="flex-1 p-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex-1 min-w-0 p-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 transition disabled:opacity-50 disabled:cursor-not-allowed"
           />
           <button
             type="submit"
