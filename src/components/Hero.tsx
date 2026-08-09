@@ -2,7 +2,7 @@ import heroImg from '../assets/hero.png'
 
   const Hero = () => {
     return (
-      <section className="relative min-h-[90vh] flex items-center">
+      <section className="relative min-h-[75vh] flex items-center">
         <img
           src={heroImg}
           alt="Equipo de abogados de Estatus Legal"
